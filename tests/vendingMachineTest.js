@@ -6,27 +6,113 @@ const assert = require('chai').assert
 const VendingMachine = require('../vendingMachine').default
 const Person = require('../person').default
 
-describe('Elevator', function() {
+describe('Vending Machine', () => {
+
   const vendingMachine = new VendingMachine()
-  const alex = new Person("Alex", 100)
+  const bugs = new Person("Bugs", 100)
+
+  afterEach(() => {
+    vendingMachine.reset();
+  });
+
+  it('should accept credits and change status idle to credited', () => {
+      assert.equal(vendingMachine.state.status, 'idle');
+
+      vendingMachine.addCredits(bugs.insertCredits(100));
+
+      assert.equal(vendingMachine.state.status, 'credited');
+      assert.equal(vendingMachine.state.credits, 100);
+    });
+
+  it('should save selection and credits if 100 credits are added', () => {
+    assert.equal(vendingMachine.state.status, 'idle');
+
+    vendingMachine.addCredits(bugs.insertCredits(100));
+    vendingMachine.setSelection(bugs.makeSelection('A1'));
+
+    assert.equal(vendingMachine.state.selection, 'A1');
+    assert.equal(vendingMachine.state.credits, 100);
+
+  })
+
+  it('should save selection and credits if 50 credits are added', () => {
+    assert.equal(vendingMachine.state.status, 'idle');
+
+    vendingMachine.addCredits(bugs.insertCredits(50));
+    vendingMachine.setSelection(bugs.makeSelection('D1'));
+
+    assert.equal(vendingMachine.state.selection, 'D1');
+    assert.equal(vendingMachine.state.credits, 50);
+
+  })
+
+  it('should return state hasItem false if there is no item in stock', () => {
+    assert.equal(vendingMachine.state.status, 'idle');
+
+    vendingMachine.addCredits(bugs.insertCredits(100));
+    vendingMachine.setSelection(bugs.makeSelection('D3'));
+
+    assert.equal(vendingMachine.state.selection, '');
+    assert.equal(vendingMachine.state.credits, 100);
+    assert.equal(vendingMachine.state.hasItem, false)
+
+  })
+
+  it('should return state hasItem true if item is in stock', () => {
+    assert.equal(vendingMachine.state.status, 'idle');
+
+    vendingMachine.addCredits(bugs.insertCredits(100));
+    vendingMachine.setSelection(bugs.makeSelection('D1'));
+
+    assert.equal(vendingMachine.state.selection, 'D1');
+    assert.equal(vendingMachine.state.credits, 100);
+    assert.equal(vendingMachine.state.hasItem, true)
+
+  })
+
+});
+
+describe('vendingMachine methods', () => {
+  const vendingMachine = new VendingMachine()
 
   afterEach(function() {
     vendingMachine.reset();
   });
 
-  xit('should bring a rider to a floor above their current floor', () => {
-    // Assert the current status of the vendingMachine is idle
-    assert.equal(vendingMachine.status, 'idle')
+  it('should have an addCredits() method', () => {
+    vendingMachine.addCredits(200)
+    assert.equal(vendingMachine.state.credits, 200)
+    assert.equal(vendingMachine.state.status, 'credited')
+  })
 
-    // Alex inserts a dollar into the vending machine
-    vendingMachine.insertCredit(alex, 100)
 
-    // Assert the current status of the vendingMachine is 'credited' after credits inserted
-    assert.equal(vendingMachine.status, 'credited')
-    // Assert the total number of credits is 100 cents ($1.00) after credits inserted
-    assert.equal(vendingMachine.credits, 100)
-    // Assert the total number of change is 0 cents ($0.00) before selection is made
-    assert.equal(vendingMachine.change, 0)
+
+  xit('should have a setSelection() method', () => {
+    vendingMachine.treats = {
+      B5: [{name: 'Mango', price: 75}]
+    }
+    vendingMachine.setSelection('B5')
+    assert.equal(vendingMachine.state.selection, 'B5')
+  })
+})
+
+describe('person methods', () => {
+  const bugs = new Person()
+
+  afterEach(() => {
+    bugs.reset();
   });
 
-});
+  it('should have an insertCredits() method', () => {
+    bugs.insertCredits(100)
+    assert.equal(bugs.state.credits, 400)
+  })
+
+
+
+  it('should have a makeSelection() method', () => {
+    bugs.makeSelection('B5')
+    assert.equal(bugs.state.selection, 'B5')
+  })
+
+})
