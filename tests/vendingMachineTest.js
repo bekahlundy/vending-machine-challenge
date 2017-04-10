@@ -52,7 +52,7 @@ describe('Vending Machine', () => {
     vendingMachine.addCredits(bugs.insertCredits(100));
     vendingMachine.setSelection(bugs.makeSelection('D3'));
 
-    assert.equal(vendingMachine.state.selection, '');
+    assert.equal(vendingMachine.state.selection, 'out of stock');
     assert.equal(vendingMachine.state.credits, 100);
     assert.equal(vendingMachine.state.hasItem, false)
 
@@ -67,6 +67,30 @@ describe('Vending Machine', () => {
     assert.equal(vendingMachine.state.selection, 'D1');
     assert.equal(vendingMachine.state.credits, 100);
     assert.equal(vendingMachine.state.hasItem, true)
+
+  })
+
+  it('should return an error if an invalid code is entered', () => {
+    assert.equal(vendingMachine.state.status, 'idle');
+
+    vendingMachine.addCredits(bugs.insertCredits(100));
+    vendingMachine.setSelection(bugs.makeSelection('D78'));
+
+    assert.equal(vendingMachine.state.selection, 'error');
+    assert.equal(vendingMachine.state.credits, 100);
+
+  })
+
+  it('should return correct amount of change when item is picked', () => {
+    assert.equal(vendingMachine.state.status, 'idle');
+
+    vendingMachine.addCredits(bugs.insertCredits(100));
+    vendingMachine.setSelection(bugs.makeSelection('D2'));
+    vendingMachine.checkChange(bugs.getChange(25))
+
+    assert.equal(vendingMachine.state.selection, 'D2');
+    assert.equal(vendingMachine.state.credits, 75);
+    assert.equal(bugs.state.change, 25);
 
   })
 
@@ -85,15 +109,11 @@ describe('vendingMachine methods', () => {
     assert.equal(vendingMachine.state.status, 'credited')
   })
 
-
-
-  xit('should have a setSelection() method', () => {
-    vendingMachine.treats = {
-      B5: [{name: 'Mango', price: 75}]
-    }
-    vendingMachine.setSelection('B5')
-    assert.equal(vendingMachine.state.selection, 'B5')
+  it('should have a setSelection() method', () => {
+    vendingMachine.setSelection('A1')
+    assert.equal(vendingMachine.state.selection, 'A1')
   })
+
 })
 
 describe('person methods', () => {
@@ -107,8 +127,6 @@ describe('person methods', () => {
     bugs.insertCredits(100)
     assert.equal(bugs.state.credits, 400)
   })
-
-
 
   it('should have a makeSelection() method', () => {
     bugs.makeSelection('B5')

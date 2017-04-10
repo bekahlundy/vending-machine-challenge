@@ -21,13 +21,20 @@ export default class VendingMachine {
 
   setSelection(selection) {
     this.state.selection = selection
+    if(Object.keys(treats).includes(selection)) {
      if (treats[selection].length === 0) {
        this.state.hasItem = false
-       this.state.selection = ''
-       return this.state.status = 'out of stock'
+       this.state.selection = 'out of stock'
      }
+   } else {
+     return this.state.selection = 'error'
+   }
   }
 
+  checkChange(selection) {
+    let itemName = this.state.selection
+    this.state.credits = treats[itemName][0].price
+}
 
 }
 

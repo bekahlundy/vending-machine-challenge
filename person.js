@@ -2,7 +2,8 @@ export default class Person {
   constructor() {
     this.state = {
       credits: 500,
-      selection: ''
+      selection: '',
+      change: ''
     }
   }
 
@@ -18,6 +19,10 @@ export default class Person {
   makeSelection(selection) {
     this.state.selection = selection
     return selection
+  }
+
+  getChange(change) {
+    return this.state.change = change
   }
 
 }
