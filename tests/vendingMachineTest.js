@@ -184,5 +184,10 @@ describe('person methods', () => {
     bugs.makeSelection('B5')
     assert.equal(bugs.state.selection, 'B5')
   })
+  
+  it('should have a getChange() method', () => {
+    bugs.getChange(25)
+    assert.equal(bugs.state.change, 25)
+  })
 
 })
