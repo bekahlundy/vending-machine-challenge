@@ -76,7 +76,7 @@ describe('Vending Machine', () => {
     vendingMachine.addCredits(bugs.insertCredits(100));
     vendingMachine.setSelection(bugs.makeSelection('D78'));
 
-    assert.equal(vendingMachine.state.selection, 'error');
+    assert.equal(vendingMachine.state.selection, 'error, bad code');
     assert.equal(vendingMachine.state.credits, 100);
 
   })
@@ -91,6 +91,53 @@ describe('Vending Machine', () => {
     assert.equal(vendingMachine.state.selection, 'D2');
     assert.equal(vendingMachine.state.credits, 75);
     assert.equal(bugs.state.change, 25);
+
+  })
+  it('should return 25c when 75c item is picked', () => {
+    assert.equal(vendingMachine.state.status, 'idle');
+
+    vendingMachine.addCredits(bugs.insertCredits(100));
+    vendingMachine.setSelection(bugs.makeSelection('D2'));
+    vendingMachine.checkChange(bugs.getChange(25))
+
+    assert.equal(vendingMachine.state.selection, 'D2');
+    assert.equal(vendingMachine.state.credits, 75);
+    assert.equal(bugs.state.change, 25);
+
+  })
+  it('should return 125c when 200c is entered', () => {
+    assert.equal(vendingMachine.state.status, 'idle');
+
+    vendingMachine.addCredits(bugs.insertCredits(200));
+    vendingMachine.setSelection(bugs.makeSelection('D2'));
+    vendingMachine.checkChange(bugs.getChange(125))
+
+    assert.equal(vendingMachine.state.selection, 'D2');
+    assert.equal(vendingMachine.state.credits, 75);
+    assert.equal(bugs.state.change, 125);
+
+  })
+  it('should return 125c when 200c is entered', () => {
+    assert.equal(vendingMachine.state.status, 'idle');
+
+    vendingMachine.addCredits(bugs.insertCredits(200));
+    vendingMachine.setSelection(bugs.makeSelection('D2'));
+    vendingMachine.checkChange(bugs.getChange(125))
+
+    assert.equal(vendingMachine.state.selection, 'D2');
+    assert.equal(vendingMachine.state.credits, 75);
+    assert.equal(bugs.state.change, 125);
+
+  })
+  it('should ask for more money when 50c is entered', () => {
+    assert.equal(vendingMachine.state.status, 'idle');
+
+    vendingMachine.addCredits(bugs.insertCredits(50));
+    vendingMachine.setSelection(bugs.makeSelection('D2'));
+    vendingMachine.checkChange(bugs.getChange(0))
+
+    assert.equal(vendingMachine.state.selection, 'not enough money');
+    assert.equal(vendingMachine.state.credits, 50);
 
   })
 
@@ -112,6 +159,11 @@ describe('vendingMachine methods', () => {
   it('should have a setSelection() method', () => {
     vendingMachine.setSelection('A1')
     assert.equal(vendingMachine.state.selection, 'A1')
+  })
+
+  it('should have a checkChange() method', () => {
+    vendingMachine.checkChange('A1')
+    assert.equal(vendingMachine.state.credits, 75)
   })
 
 })

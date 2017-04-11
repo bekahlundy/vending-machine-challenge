@@ -22,7 +22,8 @@ export default class Person {
   }
 
   getChange(change) {
-    return this.state.change = change
+    this.state.change = change
+    return change
   }
 
 }

@@ -22,18 +22,22 @@ export default class VendingMachine {
   setSelection(selection) {
     this.state.selection = selection
     if(Object.keys(treats).includes(selection)) {
-     if (treats[selection].length === 0) {
-       this.state.hasItem = false
-       this.state.selection = 'out of stock'
-     }
+      if (treats[selection].length === 0) {
+        this.state.hasItem = false
+        this.state.selection = 'out of stock'
+      }
    } else {
-     return this.state.selection = 'error'
+     return this.state.selection = 'error, bad code'
    }
   }
 
   checkChange(selection) {
     let itemName = this.state.selection
     this.state.credits = treats[itemName][0].price
+    let treatPrice = treats[itemName][0].price
+    if (this.state.credits < treatPrice) {
+      return this.state.selection = 'not enough money'
+    }
 }
 
 }
