@@ -25,6 +25,8 @@ export default class VendingMachine {
       if (treats[selection].length === 0) {
         this.state.hasItem = false
         this.state.selection = 'out of stock'
+      } else if (this.state.credits < treats[selection][0].price) {
+        console.log('did not enter enough money')
       }
    } else {
      return this.state.selection = 'error, bad code'
@@ -34,10 +36,6 @@ export default class VendingMachine {
   checkChange(selection) {
     let itemName = this.state.selection
     this.state.credits = treats[itemName][0].price
-    let treatPrice = treats[itemName][0].price
-    if (this.state.credits < treatPrice) {
-      return this.state.selection = 'not enough money'
-    }
 }
 
 }

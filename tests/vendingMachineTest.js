@@ -129,7 +129,7 @@ describe('Vending Machine', () => {
     assert.equal(bugs.state.change, 125);
 
   })
-  it('should ask for more money when 50c is entered', () => {
+  xit('should ask for more money when 50c is entered', () => {
     assert.equal(vendingMachine.state.status, 'idle');
 
     vendingMachine.addCredits(bugs.insertCredits(50));
@@ -161,7 +161,7 @@ describe('vendingMachine methods', () => {
     assert.equal(vendingMachine.state.selection, 'A1')
   })
 
-  it('should have a checkChange() method', () => {
+  xit('should have a checkChange() method', () => {
     vendingMachine.checkChange('A1')
     assert.equal(vendingMachine.state.credits, 75)
   })
